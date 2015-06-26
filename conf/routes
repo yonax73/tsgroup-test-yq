@@ -1,0 +1,17 @@
+#group
+GET     /                           controllers.GroupControl.index()
+POST    /saveGroup                  controllers.GroupControl.save()
+#programming box
+GET     /loadProgrammingBox         controllers.ProgrammingBoxControl.load()
+#collection
+POST    /saveCollection             controllers.CollectionControl.save()
+GET     /deleteCollection           controllers.CollectionControl.delete(id:Integer)
+GET     /loadCollection             controllers.CollectionControl.load(id:Integer)
+POST    /changeGroup                controllers.CollectionControl.changeGroup()
+#list
+GET    /typeCollections             controllers.MasterValueControl.typeCollections()
+GET    /colors                      controllers.MasterValueControl.colors()
+
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

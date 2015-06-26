@@ -1,0 +1,9 @@
+New log file opened at Sat Jun 20 18:04:56 COT 2015 by 4476@YonatanQ
+Sending msg to client activator-7f908c8b-f405-49e3-9960-f598f1776d50: DetachedLogEvent(LogMessage(debug,sbt server socket logs are in: C:\Users\yonatan\hubiC\play\2.3.7\tsgroup-test-yq\.sbtserver\connections\master.log))
+Sending msg to client activator-7f908c8b-f405-49e3-9960-f598f1776d50: DetachedLogEvent(LogMessage(debug,sbt client logs are in: C:\Users\yonatan\hubiC\play\2.3.7\tsgroup-test-yq\.sbtserver\connections\activator-7f908c8b-f405-49e3-9960-f598f1776d50.log))
+Reading next message from client.
+Sending msg to client activator-7f908c8b-f405-49e3-9960-f598f1776d50: DetachedLogEvent(LogMessage(debug,sbt general server logs are in: C:\Users\yonatan\hubiC\play\2.3.7\tsgroup-test-yq\.sbtserver\master.log))
+Client activator-7f908c8b-f405-49e3-9960-f598f1776d50 EOF, shutting down.
+Stopping client.
+Dropping message (0,ReceivedResponse()) to dead client activator-7f908c8b-f405-49e3-9960-f598f1776d50
+Client activator-7f908c8b-f405-49e3-9960-f598f1776d50 thread exiting.

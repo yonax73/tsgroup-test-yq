@@ -1,0 +1,30 @@
+New log file opened at Sat Jun 20 18:04:45 COT 2015 by 4476@YonatanQ
+Taking next connection to: 24023
+New client attempting to connect on port: 24029-24023
+  Address = /192.168.0.20:24023
+This client on port 24029 has uuid 7f908c8b-f405-49e3-9960-f598f1776d50 configName activator humanReadableName Activator protocolVersion 3 featureTags Vector()
+Connected Clients: activator-7f908c8b-f405-49e3-9960-f598f1776d50
+Taking next connection to: 24023
+New client attempting to connect on port: 24222-24023
+  Address = /192.168.0.20:24023
+Handshake exception on socket: 24222
+sbt.impl.ipc.HandshakeException: Unable to perform handshake
+	at sbt.impl.ipc.Peer.handshake(IPC.scala:46)
+	at sbt.impl.ipc.MultiClientServer.<init>(IPC.scala:150)
+	at sbt.server.SbtServerSocketHandler$$anon$1.run(SbtServerSocketHandler.scala:43)
+Caused by: java.io.EOFException
+	at java.io.DataInputStream.readInt(Unknown Source)
+	at sbt.impl.ipc.Peer.receive(IPC.scala:95)
+	at sbt.impl.ipc.Peer.handshake(IPC.scala:49)
+	... 2 more
+Taking next connection to: 24023
+New client attempting to connect on port: 24223-24023
+  Address = /192.168.0.20:24023
+This client on port 24223 has uuid bad9b770-8973-4854-bb36-6a2ceb7791e5 configName activator humanReadableName Activator protocolVersion 3 featureTags Vector()
+Connected Clients: activator-bad9b770-8973-4854-bb36-6a2ceb7791e5
+Taking next connection to: 24023
+Server socket closed java.net.SocketException: Socket operation on nonsocket: configureBlocking
+Server socket thread exiting.
+0 clients open, will close them...
+All client sockets have been closed.
+Closing the 4476@YonatanQ logs at Sat Jun 20 18:06:10 COT 2015, goodbye.

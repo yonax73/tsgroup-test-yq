@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="author" content="Yonatan Alexis Quintero Rodriguez | yonax73@@gmail.com ">
+	<title>Lanzamientos de Colecciones</title>
+	<link href="@routes.Assets.versioned("css/bootstrap.min.css")" rel="stylesheet" media="screen" >		
+	<link href="@routes.Assets.versioned("plugins/font-awesome/css/font-awesome.min.css")" rel="stylesheet" media="screen" >
+	<link href="@routes.Assets.versioned("plugins/font-awesome/css/font-awesome.min.css")" rel="stylesheet" media="screen" >				
+	<link href="@routes.Assets.versioned("plugins/bootstrap-validator/bootstrapValidator.min.css")" rel="shortcut icon" type="image/png" >		
+	<link href="@routes.Assets.versioned("plugins/material-design/css/roboto.min.css")" rel="stylesheet" media="screen" >	
+	<link href="@routes.Assets.versioned("plugins/material-design/css/material.min.css")" rel="stylesheet" media="screen" >	
+	<link href="@routes.Assets.versioned("plugins/material-design/css/ripples.min.css")" rel="stylesheet" media="screen" >	
+	<style type="text/css">
+	.container	{
+		padding-top: 15px;
+	}
+	#content {	
+		border-radius: 4px;
+		display: inline-flex;
+		margin-top: 2em;
+	}
+	#content ul {
+		list-style: outside none none;
+		margin: 0;
+		padding: 0;
+	}
+	#content li {		
+		line-height: 1;
+		margin: 0;		
+		text-align: center;
+		border-top: 1px solid #ddd;
+		border-right: 1px solid #ddd;
+	}
+	#content ul:last-child li {				
+		border-right: none;
+	}
+	.group {		  
+		padding: 20px 30px;
+		border-bottom: 1px solid transparent;		
+		color: #fff;
+		background-color: #009688;        
+	}
+	.collection {
+		background-color: #fff;
+		min-height: 115px;
+		padding-top: 0;
+	}
+	.icon-preview{		
+		cursor: pointer;
+		color: #999;
+	}
+	.preview{
+		color: #fff;
+		font-weight: bold;
+	}
+	.preview,
+	.icon-preview {
+		height: 115px;
+		padding-top: 25%;
+		position: relative;
+		top: 0;
+		width: 100%;
+	}
+	.delete {
+		bottom: 0;
+		cursor: pointer;
+		position: absolute;
+		right: 0;
+	}
+	.drag {
+		cursor: move;
+		left: 0;
+		position: absolute;
+		top: 0;
+	}
+	.edit{
+		cursor: pointer;
+		font-size: 1em;
+	}
+	.btn-primary:not(.btn-link):not(.btn-flat) {  
+		color: #fff;
+	}
+	.mdi-content-add-circle {
+		font-size: 3.5em;
+	}
+	[draggable] {
+		-moz-user-select: none;
+		-khtml-user-select: none;
+		-webkit-user-select: none;
+		user-select: none;
+		/* Required to make elements draggable in old WebKit */
+		-khtml-user-drag: element;
+		-webkit-user-drag: element;
+	}
+	.over {
+		border: 1px dashed #000;
+	}
+	.box-blue{
+		background-color:#03a9f4;
+	}
+	.box-red{
+		background-color:#f44336;
+	}
+	.box-green{
+		background-color: #4caf50;
+	}
+	.box-orange{
+		background-color: #ff5722;
+	}
+	
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-3 col-md-3 col-sm-6">
+				<button class="btn btn-primary btn-raised" data-toggle="modal" data-target="#group-modal">Agregar Grupo</button>	    			
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				<div id="content" class="shadow-z-2"></div>
+			</div>
+		</div>
+	</div>
+	<!-- MODAL WAIT -->
+	<div class="modal fade" id="wait-modal" tabindex="-1" role="dialog" >
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>					
+				</div>
+				<div class="modal-body">
+					<h4>Cargando...</h4>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- END MODAL GROUP -->
+	<!-- MODAL GROUP -->
+	<div class="modal fade" id="group-modal" tabindex="-1" role="dialog" >
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">Grupo de lanzamiento</h4>
+				</div>
+				<div class="modal-body">
+					<form id="form-group" action="/saveGroup">
+						<div class="form-group">
+							<label class="control-label" for="groupName">Nombre</label>
+							<input type="text" class="form-control" name="groupName" id="groupName" placeholder="Nombre">
+						</div>
+						<div class="form-group">
+							<label class="control-label" for="creationYear">A&ntilde;o de creaci&oacute;n</label>
+							<input type="text" class="form-control" name="creationYear" id="creationYear" placeholder="A&ntilde;o de creaci&oacute;n">
+						</div>
+						<div class="form-group">
+							<label class="control-label" for="startDate">Fecha de inicio</label>
+							<input type="text" class="form-control" name="startDate" id="startDate" placeholder="DD-MM-YYYY">
+						</div>
+						<div class="form-group">
+							<label class="control-label" for="expirationDate">Fecha de fin</label>
+							<input type="text" class="form-control" name="expirationDate" id="expirationDate" placeholder="DD-MM-YYYY">
+						</div>
+						<input type="hidden" id="groupId" name="groupId" value="0">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<button type="submit" class="btn btn-primary">Guardar</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- END MODAL GROUP -->
+	<!-- MODAL COLLECTION -->
+	<div class="modal fade" id="collection-modal" tabindex="-1" role="dialog" >
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">Colecci&oacute;n</h4>
+				</div>
+				<div class="modal-body">
+					<form id="form-collection" action="/saveCollection">
+						<div class="form-group">
+							<label class="control-label" for="collectionName">Nombre</label>
+							<input type="text" class="form-control" name="collectionName" id="collectionName" placeholder="Nombre">
+						</div>
+						<div class="form-group">
+							<label class="control-label" for="brand">Marca</label>
+							<input type="text" class="form-control" name="brand" id="brand" placeholder="Marca">
+						</div>
+						<div class="form-group">
+							<label class="control-label" for="type">Tipo de coleccion</label>
+							<select id="type" name="type" class="form-control">								
+							</select>
+						</div>
+						<div class="form-group">
+							<label class="control-label" for="color">Color</label>
+							<select id="color" name="color" class="form-control">								
+							</select>
+						</div>
+						<input type="hidden" id="groupCollectionId" name="groupCollectionId" value="0">
+						<input type="hidden" id="collectionId" name="collectionId" value="0">						
+						<input type="hidden" id="row" name="row" value="0">						
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<button type="submit" class="btn btn-primary">Guardar</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- END MODAL COLLECTION -->
+	<script src="@routes.Assets.versioned("js/jquery-2.1.1.min.js")"></script>
+	<script src="@routes.Assets.versioned("js/bootstrap.min.js")"></script>		
+	<script src="@routes.Assets.versioned("plugins/bootstrap-validator/bootstrapValidator.min.js")"></script>		
+	<script src="@routes.Assets.versioned("plugins/material-design/js/ripples.min.js")"></script>		
+	<script src="@routes.Assets.versioned("plugins/material-design/js/material.min.js")"></script>		
+	<script type="text/javascript">
+	loadProgrammingBox();
+	saveGroup();
+	saveCollection();
+	loadColors();
+	loadTypeCollections();
+	var dragSrcEl = null;
+
+	function handleDragStart(e) {
+		this.style.opacity = '0.4';
+		dragSrcEl = this;
+		e.dataTransfer.effectAllowed = 'move';
+		e.dataTransfer.setData('text/html', this.innerHTML);
+		e.dataTransfer.setData('id',$(this).children().attr( "id"));
+	}
+	function handleDragOver(e) {
+		if (e.preventDefault) {
+			e.preventDefault();
+		}
+		e.dataTransfer.dropEffect = 'move';
+		return false;
+	}
+
+	function handleDragEnter(e) {    
+		this.classList.add('over');
+	}
+
+	function handleDragLeave(e) {
+		this.classList.remove('over'); 
+	}
+
+	function handleDrop(e) {
+		if (e.stopPropagation) {
+			e.stopPropagation(); 
+		}		
+		var dataTransfer = e.dataTransfer.getData('text/html');			
+		var transfer = document.getElementById(e.dataTransfer.getData('id')).getElementsByClassName('edit')[0];
+		var target = document.getElementById($(this).children().attr("id")).getElementsByClassName('edit')[0];
+		if(!target){
+			alert('No se puede cambiar a una colecion vacia');
+			return true;
+		}
+		var data = 'collectionId='+transfer.dataset.id
+					+'&groupCollectionId='+transfer.dataset.group
+					+'&row='+transfer.dataset.row
+					+'&collectionId='+target.dataset.id
+					+'&groupCollectionId='+target.dataset.group
+					+'&row='+target.dataset.row; 					
+		var r = confirm("Desea cambiar de grupo ?"); 
+
+		if(r){
+			if (dragSrcEl != this) {        
+				dragSrcEl.innerHTML = this.innerHTML;             
+				this.innerHTML = dataTransfer;
+			}
+			$.ajax({
+				url: '/changeGroup',
+				type: 'POST',	
+				data: data,			
+				success: function(response) {
+					try {
+						if (response <= 0) {						
+							alert('Error al guardar La coleccion');
+						}else{
+							console.log('La Coleccion cambiado de grupo correctamente!');
+						}
+					} catch (ex) {
+						console.log(ex);
+						alert(ex.message);
+					}
+				},
+				error: function(response) {
+					alert(response.responseText);
+				}
+			});
+		}
+		return false;
+	}
+
+	function handleDragEnd(e) {    
+		this.style.opacity = '1';
+		var cols = document.querySelectorAll('.collection');
+		[].forEach.call(cols, function(col) {
+			col.classList.remove('over');
+		});
+	}
+
+	function addEventDragAndDrop() {
+		var cols = document.querySelectorAll('.collection');
+		[].forEach.call(cols, function(col) {
+			col.addEventListener('dragstart', handleDragStart, false);
+			col.addEventListener('dragenter', handleDragEnter, false);
+			col.addEventListener('dragover', handleDragOver, false);
+			col.addEventListener('dragleave', handleDragLeave, false);
+			col.addEventListener('drop', handleDrop, false);
+			col.addEventListener('dragend', handleDragEnd, false);
+		});
+	}
+
+	function loadProgrammingBox() {
+		$('#wait-modal').modal('show');
+		$.ajax({
+			type: 'GET',
+			url: '/loadProgrammingBox',
+			success: function(response) {
+				try {
+					var content = document.getElementById('content');
+					var programmingBox = JSON.parse(response);
+					var groups = programmingBox.groups;
+					var HTML = '';
+					for (var i = 0; i < groups.length; i++) {
+						var g = groups[i];
+						var ul = '<li  class="group" id="group-{id}">{name}</li>'
+						.replace('{id}', g.id)
+						.replace('{name}', g.name);
+						var collections = g.collections;
+						for (var j = 0; j < collections.length; j++) {
+							var c = collections[j];
+                        if (c.id > 0) { //si existe coleccion
+                        	var str = '<li draggable="true" class="collection " >' + '<div  id="collection-{id}" class="preview {color}">' + '<span data-id="{id1}" data-group="{groupId}" data-row="{row}" class="edit" onclick="openCollectionModal(this)">{name}</span>' + '<span data-id="{id2}" class="drag"><i class="mdi-action-view-headline"></i></span>' + '<span data-id="{id3}" class="delete" onclick="deleteCollection(this)"><i class="mdi-action-delete"></i></span>' + '</div></li>';
+                        	ul += str
+                        	.replace('{id}', c.id)
+                        	.replace('{name}', c.name)
+                        	.replace('{id1}', c.id)
+                        	.replace('{id2}', c.id)
+                        	.replace('{id3}', c.id)
+                        	.replace('{groupId}', g.id)
+                        	.replace('{row}', c.row)
+                        	.replace('{color}', c.color.value2);
+                        } else { //si no existe coleccion
+                        	var str = '<li draggable="true" class="collection" >' + 
+                        	'<div id="collection-{id}" data-id="{id1}" data-group="{groupId}" data-row="{row}" onclick="openCollectionModal(this)" class="icon-preview edit">' + '<i class="mdi-content-add-circle"></i>' + '<small><br/><br/>Crear Coleccion</small></div></li>';
+                        	ul += str
+                        	.replace('{id}', c.id)
+                        	.replace('{id1}', c.id)
+                        	.replace('{groupId}', g.id)
+                        	.replace('{row}', c.row);
+                        }
+                    };
+                    HTML += '<ul>{content}</ul>'.replace('{content}', ul);
+                };
+                content.innerHTML = HTML;
+                $('#wait-modal').modal('hide');
+                addEventDragAndDrop();
+            } catch (ex) {
+            	console.error(ex);
+            	alert(ex.message);
+            }
+        },
+        error: function(xhr) {
+        	alert(xhr.statusText);
+        }
+    });
+}
+
+function openCollectionModal(element) {
+	var id = element.dataset.id;
+	var groupId = element.dataset.group;
+	$('#collectionId').val(id);
+	$('#row').val(element.dataset.row);
+	$('#groupCollectionId').val(groupId);
+	if (id > 0) {
+		document.getElementById('type').readOnly = true;
+		$('#wait-modal').modal('show');
+		$.ajax({
+			url: '/loadCollection?id=' + id,
+			type: 'GET',
+			success: function(response) {
+				try {
+					var c = JSON.parse(response);
+					$('#collectionName').val(c.name);
+					$('#brand').val(c.brand);
+					$('#type').val(c.type.id);
+					$('#color').val(c.color.id);
+					$('#groupCollectionId').val(groupId);
+					$('#collectionId').val(c.id);
+					$('#row').val(c.row);
+				} catch (ex) {
+					console.log(ex);
+					alert(ex.message);
+				}
+				$('#wait-modal').modal('hide');
+				$('#collection-modal').modal('show');
+			},
+			error: function(response) {
+				alert(response.responseText);
+			}
+		});
+
+	} else {
+		$('#collection-modal').modal('show');
+	}
+}
+
+function deleteCollection(element) {
+	var id = element.dataset.id;
+	$('#wait-modal').modal('show');
+	$.ajax({
+		url: '/deleteCollection?id=' + id,
+		type: 'GET',
+		success: function(response) {
+			try {
+				if (response > 0) {
+					loadProgrammingBox();
+					alert('El grupo se elimino correctamente');
+				} else {
+					alert('Error al eliminar el grupo');
+
+				}
+			} catch (ex) {
+				console.log(ex);
+				alert(ex.message);
+			}
+		},
+		error: function(response) {
+			alert(response.responseText);
+		}
+	});
+
+}
+var msg = 'El campo es requerido';
+var faIcon = {
+	valid: 'fa fa-check-circle fa-lg text-success',
+	invalid: 'fa fa-times-circle fa-lg',
+	validating: 'fa fa-refresh'
+};
+
+function saveGroup() {
+	$('#form-group').bootstrapValidator({
+		feedbackIcons: faIcon,
+		fields: {
+			groupName: {
+				validators: {
+					notEmpty: {
+						message: msg
+					}
+				}
+			},
+			creationYear: {
+				validators: {
+					notEmpty: {
+						message: msg
+					}
+				}
+			},
+			startDate: {
+				validators: {
+					date: {
+						format: 'DD-MM-YYYY',
+						message: msg
+					},
+					notEmpty: {
+						message: msg
+					}
+				}
+			},
+			expirationDate: {
+				validators: {
+					date: {
+						format: 'DD-MM-YYYY',
+						message: msg
+					},
+					notEmpty: {
+						message: msg
+					}
+				}
+			},
+		}
+	}).on('success.field.bv', function(e, data) {
+		var $parent = data.element.parents('.form-group');
+		$parent.removeClass('has-success');
+	}).on('success.form.bv', function(e) {
+		e.preventDefault();
+		var $form = $(e.target);
+		$.ajax({
+			url: $form.attr('action'),
+			type: 'POST',
+			data: $form.serialize(),
+			success: function(response) {
+				try {
+					if (response > 0) {
+						loadProgrammingBox();
+						alert('El grupo se guardo correctamente');
+						$('#group-modal').modal('hide');
+					} else {
+						alert('Error al guardar el grupo');
+					}
+				} catch (ex) {
+					console.log(ex);
+					alert(ex.message);
+				}
+			},
+			error: function(response) {
+				alert(response.responseText);
+			}
+		});
+
+	});
+}
+
+function saveCollection() {
+	$('#form-collection').bootstrapValidator({
+		feedbackIcons: faIcon,
+		fields: {
+			collectionName: {
+				validators: {
+					notEmpty: {
+						message: msg
+					}
+				}
+			},
+			brand: {
+				validators: {
+					notEmpty: {
+						message: msg
+					}
+				}
+			}
+		}
+	}).on('success.field.bv', function(e, data) {
+		var $parent = data.element.parents('.form-group');
+		$parent.removeClass('has-success');
+	}).on('success.form.bv', function(e) {
+		e.preventDefault();
+		var $form = $(e.target);
+		$.ajax({
+			url: $form.attr('action'),
+			type: 'POST',
+			data: $form.serialize(),
+			success: function(response) {
+				try {
+					if (response > 0) {
+						loadProgrammingBox();
+						alert('La coleccion se guardo correctamente');
+						$('#collection-modal').modal('hide');
+					} else {
+						alert('Error al guardar La coleccion');
+					}
+				} catch (ex) {
+					console.log(ex);
+					alert(ex.message);
+				}
+			},
+			error: function(response) {
+				alert(response.responseText);
+			}
+		});
+
+	});
+}
+
+function loadTypeCollections() {
+	$typeCollections = $('#type');
+	$.ajax({
+		url: '/typeCollections',
+		type: 'GET',
+		success: function(response) {
+			$typeCollections.html('');
+			$.each(JSON.parse(response), function(key, val) {
+				$typeCollections.append('<option value="' + val.id + '" >' + val.value1 + '</option>');
+			});
+		},
+		error: function(response) {
+			alert(response.responseText);
+		}
+	});
+}
+
+function loadColors() {
+	$select = $('#color');
+	$.ajax({
+		url: '/colors',
+		type: 'GET',
+		success: function(response) {
+			$select.html('');
+			$.each(JSON.parse(response), function(key, val) {
+				$select.append('<option value="' + val.id + '" >' + val.value1 + '</option>');
+			});
+		},
+		error: function(response) {
+			alert(response.responseText);
+		}
+	});
+}
+</script>
+</body>
+</html>
